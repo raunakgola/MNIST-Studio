@@ -1,0 +1,192 @@
+MNIST-STUDIO AWS EC2 DEPLOYMENT GUIDE
+=============================================
+
+Written for June 2025 - Please check AWS documentation for any updates if viewing in the future
+
+OVERVIEW
+--------
+This guide walks you through deploying the MNIST-Studio application on Amazon Web Services using an EC2 instance. The process involves setting up a virtual server in the cloud, installing Docker to run containerized applications, and configuring the network settings to make your application accessible from the internet.
+
+Understanding the deployment strategy: We use Docker containers because they package our application with all its dependencies, ensuring it runs consistently regardless of the server environment. This approach eliminates the "it works on my machine" problem and makes deployment much more reliable.
+
+STEP 1: CREATE AN EC2 INSTANCE
+------------------------------
+Navigate to the AWS Management Console and access the EC2 service. When creating your instance, consider these important decisions:
+
+Choose an Amazon Machine Image (AMI): Select "Ubuntu Server 22.04 LTS" or similar Linux distribution. Ubuntu is recommended because it has excellent Docker support and the commands in this guide are tested on Ubuntu systems.
+
+Select an instance type: For this application, a t2.micro or t3.micro instance will suffice for testing purposes. These provide 1 vCPU and 1GB of RAM, which is adequate for running both containers simultaneously.
+
+Configure security groups during creation or note that you'll need to modify them later. The security group acts as a virtual firewall that controls network traffic to your instance.
+
+Generate or select a key pair for SSH access. This cryptographic key pair allows you to securely connect to your instance without using passwords.
+
+STEP 2: CONNECT TO YOUR EC2 INSTANCE
+------------------------------------
+Once your instance is running (indicated by a "running" state in the EC2 console), establish an SSH connection.
+
+Use your terminal or SSH client to connect:
+ssh -i your-key-file.pem ubuntu@your-instance-public-ip
+
+Replace "your-key-file.pem" with the actual path to your private key file, and "your-instance-public-ip" with the public IP address shown in your EC2 console.
+
+The connection establishes a secure command-line interface to your remote server, allowing you to execute commands as if you were sitting directly at the machine.
+
+STEP 3: INSTALL AND CONFIGURE DOCKER
+------------------------------------
+Docker installation requires several commands that work together to set up the container runtime environment:
+
+First, update the package repository to ensure you have access to the latest software versions:
+sudo apt-get update
+
+This command refreshes the local package database with the most recent information from Ubuntu's software repositories.
+
+Install Docker using the package manager:
+sudo apt-get install -y docker.io
+
+The "-y" flag automatically answers "yes" to any prompts, allowing the installation to proceed without manual intervention.
+
+Start the Docker service immediately:
+sudo systemctl start docker
+
+This activates the Docker daemon, which is the background service that manages containers.
+
+Enable Docker to start automatically when the system boots:
+sudo systemctl enable docker
+
+This ensures Docker will be available after server restarts without manual intervention.
+
+Add your user account to the Docker group to avoid needing sudo for Docker commands:
+sudo usermod -aG docker $USER
+
+This command modifies user permissions, but the changes don't take effect until you start a new session.
+
+Exit the current SSH session:
+exit
+
+This step is crucial because the group membership changes require a fresh login session to become active.
+
+STEP 4: RECONNECT TO APPLY PERMISSION CHANGES
+---------------------------------------------
+Establish a new SSH connection to your EC2 instance using the same command as before:
+ssh -i your-key-file.pem ubuntu@your-instance-public-ip
+
+This fresh connection ensures your user account has the proper Docker permissions that were configured in the previous step.
+
+STEP 5: DEPLOY THE APPLICATION CONTAINERS
+-----------------------------------------
+Now you'll pull and run the Docker containers for both the backend API and frontend interface.
+
+For the backend service, first download the container image:
+docker pull raunakgola123/mnist-backend:latest
+
+This command downloads the pre-built backend container from Docker Hub to your EC2 instance.
+
+Launch the backend container with specific configuration:
+docker run -d --name mnist-api-container --log-driver=json-file --log-opt max-size=10m --log-opt max-file=3 -p 8000:8000 raunakgola123/mnist-backend:latest
+
+Understanding this command's parameters:
+- "-d" runs the container in detached mode (in the background)
+- "--name" assigns a friendly name for easier management
+- "--log-driver" and "--log-opt" configure log file management to prevent disk space issues
+- "-p 8000:8000" maps port 8000 on your EC2 instance to port 8000 inside the container
+
+For the frontend application, download the container image:
+docker pull raunakgola123/mnist-frontend:latest
+
+Launch the frontend container:
+docker run -p 8080:80 raunakgola123/mnist-frontend:latest
+
+This maps port 8080 on your EC2 instance to port 80 inside the container, making the web interface accessible.
+
+STEP 6: CONFIGURE SECURITY GROUP SETTINGS
+-----------------------------------------
+Security groups control network access to your EC2 instance. You need to allow incoming traffic on the ports your applications use.
+
+In the AWS Console, navigate to EC2 > Security Groups and select the security group associated with your instance.
+
+Add the following inbound rules:
+- Type: Custom TCP, Port: 8000, Source: 0.0.0.0/0 (for the API)
+- Type: Custom TCP, Port: 8080, Source: 0.0.0.0/0 (for the frontend)
+
+The source "0.0.0.0/0" allows access from any IP address. In production environments, you might want to restrict this to specific IP ranges for security.
+
+STEP 7: VERIFY API FUNCTIONALITY
+--------------------------------
+Test that your backend API is working correctly by accessing the automatic documentation that FastAPI provides.
+
+Open your web browser and navigate to:
+http://your-instance-public-ip:8000/docs
+
+This should display the interactive API documentation, confirming that your backend service is running and accessible.
+
+You can also test basic connectivity:
+http://your-instance-public-ip:8000
+
+This should return a response from your API, indicating successful deployment.
+
+STEP 8: CONFIGURE FRONTEND FOR PRODUCTION
+-----------------------------------------
+The frontend container needs to know where to find your backend API. Since both are now running on your EC2 instance, you'll need to update the frontend configuration.
+
+This typically involves modifying environment variables or configuration files within the frontend container to point to your EC2 instance's public IP address and port 8000 for API calls.
+
+The exact method depends on how your frontend application is configured. Common approaches include:
+- Setting environment variables during container startup
+- Rebuilding the frontend container with production API endpoints
+- Using a reverse proxy configuration
+
+ACCESSING YOUR APPLICATION
+--------------------------
+Once everything is configured, you can access your MNIST-Studio application by navigating to:
+http://your-instance-public-ip:8080
+
+The drawing interface should load, and when you draw digits, they should be processed by the backend API running on port 8000.
+
+IMPORTANT NOTES
+--------------
+This guide was written for June 2025. AWS services and Docker Hub may have changes in future versions. If you encounter issues:
+
+1. Check the official AWS documentation for EC2 and security group updates
+2. Verify Docker installation procedures for your chosen Linux distribution
+3. Confirm that the Docker images are still available at the specified registry locations
+4. Review any deprecation notices or security updates from AWS
+
+If you discover changes or improvements to this deployment process, please contribute by updating this guide to help future users.
+
+TROUBLESHOOTING COMMON ISSUES
+-----------------------------
+Container not starting: Check Docker logs using "docker logs container-name"
+Cannot access application: Verify security group rules and ensure ports are correctly mapped
+Permission denied errors: Confirm you reconnected after adding user to Docker group
+API connection failures: Ensure both containers are running and frontend is configured with correct API endpoint
+
+This deployment approach provides a solid foundation for running your MNIST-Studio application in a cloud environment with good performance and reliability characteristics.
+
+TL;DR
+
+Instructions:
+ 1. create an EC2 instance
+ 2. Connect to the EC2 instance
+
+ 3. Run the following commands
+  a. sudo apt-get update
+  b. sudo apt-get install -y docker.io
+  c. sudo systemctl start docker
+  d. sudo systemctl enable docker
+  e. sudo usermod -aG docker $USER
+  f. exit
+ 
+ 4. Restart a new connection to EC2 instance
+ 5. Run the following commands
+  a. ddocker pull raunakgola123/mnist-backend:latest
+  b. docker run -d --name mnist-api-container --log-driver=json-file --log-opt max-size=10m --log-opt max-file=3 -p 8000:8000 raunakgola123/fastapi-backend:latest
+  for forntened 
+  a. docker pull raunakgola123/mnist-frontend:latest
+  b. docker run -p 8080:80 raunakgola123/mnist-frontend:latest
+
+ 6. change security group settings
+ 7. Check the API 
+ 8. Change the frontend code
+
+ NOTE: THIS FILE ACCORDING TO THE JUNE 2025 if you see this project in future may be there are some changes please refer the documentation of AWS and if there are changes please contribute by changing the content of this file
