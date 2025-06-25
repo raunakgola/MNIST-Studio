@@ -1,194 +1,104 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+# === OS and Editor Files ===
+# These are files created by your operating system or code editor
+# that are specific to your local environment
+.DS_Store          # MacOS file system metadata
+.DS_Store?         # Backup DS_Store files
+Thumbs.db          # Windows thumbnail cache
+.vscode/           # VS Code workspace settings
+.idea/             # IntelliJ/PyCharm settings
+*.swp              # Vim swap files
+*.swo              # Vim swap files
+*~                 # Backup files created by various editors
 
-# C extensions
-*.so
+# === Node.js and React (Frontend) ===
+# Node.js creates these folders and files during development
+node_modules/      # Installed packages - can be recreated with npm install
+npm-debug.log*     # Debug logs from npm
+yarn-debug.log*    # Debug logs from yarn
+yarn-error.log*    # Error logs from yarn
+.pnpm-debug.log*   # Debug logs from pnpm
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+# Build outputs from React
+build/             # Production build folder
+dist/              # Distribution folder
+.next/             # Next.js build folder (if you use Next.js later)
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+# Environment files (contain sensitive information)
+.env               # Environment variables
+.env.local         # Local environment overrides
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Installer logs
-pip-log.txt
+# === Python and FastAPI (Backend) ===
+# Python bytecode and cache files
+__pycache__/       # Python cache folders
+*.py[cod]          # Compiled Python files
+*$py.class         # More compiled Python files
+*.so               # Shared objects (compiled extensions)
+
+# Virtual environments (Python package isolation)
+venv/              # Virtual environment folder
+env/               # Alternative virtual environment name
+ENV/               # Another common virtual environment name
+.venv/             # Hidden virtual environment folder
+
+# Python package management
+pip-log.txt        # Pip installation logs
 pip-delete-this-directory.txt
+.pip-cache/        # Pip cache directory
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-cover/
+# Testing and coverage reports
+.coverage          # Code coverage data
+htmlcov/           # HTML coverage reports
+.pytest_cache/     # Pytest cache
+.tox/              # Tox testing environments
+coverage.xml       # Coverage XML reports
+*.cover            # Coverage files
+.hypothesis/       # Hypothesis testing cache
 
-# Translations
-*.mo
-*.pot
+# === Docker ===
+# Docker generates these files during build and run
+.dockerignore      # Wait, this shouldn't be ignored - remove this line!
+docker-compose.override.yml  # Local docker-compose overrides
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
+# === Database Files ===
+# Local database files that shouldn't be shared
+*.db               # SQLite databases
+*.sqlite           # SQLite databases
+*.sqlite3          # SQLite databases
 
-# Flask stuff:
-instance/
-.webassets-cache
+# === Logs ===
+# Log files from various services
+logs/              # Log directories
+*.log              # Individual log files
+npm-debug.log*     # NPM debug logs
+yarn-debug.log*    # Yarn debug logs
 
-# Scrapy stuff:
-.scrapy
+# === Temporary and Cache Files ===
+# Various temporary files created during development
+.tmp/              # Temporary directories
+.cache/            # Cache directories
+.parcel-cache/     # Parcel bundler cache
+.sass-cache/       # Sass cache
 
-# Sphinx documentation
-docs/_build/
+# === Machine Learning Specific ===
+# Files specific to your ML workflow
+*.pkl              # Pickled models (you might want to track some of these)
+*.joblib           # Joblib serialized models
+*.h5               # Keras/TensorFlow models
+*.pb               # TensorFlow protobuf models
+experiments/       # ML experiment tracking folders
+wandb/             # Weights & Biases experiment tracking
 
-# PyBuilder
-.pybuilder/
-target/
+# === Documentation Build Files ===
+# Generated documentation that can be rebuilt
+docs/_build/       # Sphinx documentation builds
+docs/build/        # Alternative documentation build folder
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-#   For a library or package, you might want to ignore these files since the code is
-#   intended to run in multiple environments; otherwise, check them in:
-# .python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# UV
-#   Similar to Pipfile.lock, it is generally recommended to include uv.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#uv.lock
-
-# poetry
-#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-#poetry.lock
-
-# pdm
-#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-#pdm.lock
-#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
-#   in version control.
-#   https://pdm.fming.dev/latest/usage/project/#working-with-version-control
-.pdm.toml
-.pdm-python
-.pdm-build/
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# pytype static type analyzer
-.pytype/
-
-# Cython debug symbols
-cython_debug/
-
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
-
-# Abstra
-# Abstra is an AI-powered process automation framework.
-# Ignore directories containing user credentials, local state, and settings.
-# Learn more at https://abstra.io/docs
-.abstra/
-
-# Visual Studio Code
-#  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
-#  that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
-#  and can be added to the global gitignore or merged into this file. However, if you prefer, 
-#  you could uncomment the following to ignore the enitre vscode folder
-# .vscode/
-
-# Ruff stuff:
-.ruff_cache/
-
-# PyPI configuration file
-.pypirc
-
-# Cursor
-#  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
-#  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
-#  refer to https://docs.cursor.com/context/ignore-files
-.cursorignore
-.cursorindexingignore
+# === IDE and Development Tools ===
+# Configuration files for development tools
+.vscode/settings.json  # VS Code workspace settings
+.idea/             # JetBrains IDE settings
+*.sublime-project  # Sublime Text project files
+*.sublime-workspace # Sublime Text workspace files
