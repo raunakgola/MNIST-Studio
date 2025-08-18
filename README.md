@@ -2,7 +2,6 @@
 
 A full-stack MNIST digit visualization and prediction tool built with React frontend and FastAPI backend. This interactive application allows users to draw digits on a 28×28 pixel grid and get real-time predictions using a trained deep learning model.
 
-[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=raunakgola&repo=MNIST-Studio)](https://github.com/raunakgola/MNIST-Studio)
 
 ## 🌟 Features
 
