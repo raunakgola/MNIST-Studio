@@ -128,6 +128,8 @@ MNIST-Studio/
 
 A demonstration video is included in the repository that showcases the application's features and functionality. Download the video file to see the interactive drawing interface and real-time prediction capabilities in action.
 
+https://github.com/user-attachments/assets/c713826c-5f92-4570-b3c9-bd7c650c45b9
+
 ## 🛠️ Technical Architecture
 
 **Frontend Technologies**
